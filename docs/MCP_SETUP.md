@@ -1,7 +1,8 @@
 # mycelium MCP 서버 등록 가이드
 
-mycelium MCP 서버를 Claude Code에 등록하면, Claude Code가 마크다운 볼트를 직접
-의미검색하거나 RAG 답변을 생성할 수 있다. 기본 볼트는 동봉된 `sample_vault/`이며,
+mycelium MCP 서버를 등록하면, AI 에이전트가 마크다운 볼트를 직접 의미검색하거나
+RAG 답변을 생성할 수 있다. **표준 MCP(stdio)이므로 Claude Code 전용이 아니라
+Codex 등 MCP 호환 클라이언트에서 동작한다.** 기본 볼트는 동봉된 `sample_vault/`이며,
 자신의 노트 폴더를 쓰려면 `VAULT_PATH` 환경변수로 지정한다.
 
 ---
@@ -43,6 +44,21 @@ claude mcp list
 ```
 mycelium: /path/to/mycelium/.venv/bin/python -m mycelium serve
 ```
+
+---
+
+## Codex CLI에 MCP 서버 등록
+
+표준 MCP(stdio)라 Claude Code 전용이 아니다 — OpenAI Codex CLI도 stdio MCP 서버를 지원한다.
+
+```bash
+codex mcp add mycelium -- /path/to/mycelium/.venv/bin/python -m mycelium serve
+```
+
+설정은 `~/.codex/config.toml`에 저장되며(프로젝트 단위로 한정하려면 신뢰된 프로젝트의 `.codex/config.toml`), Codex CLI와 IDE 확장이 공유한다. 등록 후 Codex 세션에서 동일하게 `vault_search`·`vault_ask` 툴을 인식한다.
+
+> **MCP 없이도 범용** — MCP를 쓰지 않는 환경에서는 CLI를 셸로 직접 부르면 된다:
+> `myco ask "..."` / `myco search "..."`. 어떤 에이전트(Codex·Gemini 등)든 호출 가능하다.
 
 ---
 

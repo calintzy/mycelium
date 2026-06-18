@@ -5,6 +5,8 @@
 ![LLM: local (Ollama)](https://img.shields.io/badge/LLM-local%20(Ollama)-success)
 ![RAG: hybrid + GraphRAG](https://img.shields.io/badge/RAG-hybrid%20%2B%20GraphRAG-orange)
 
+[English](README.en.md) · **한국어**
+
 > 균사체(mycelium)는 흩어진 균사들이 땅속에서 연결되어 양분을 주고받는 거대한 지하 네트워크다.
 > 이 프로젝트는 흩어진 마크다운 노트를 검색·그래프·RAG로 연결해, 지식이 서로를 보강하며
 > 자라는 지하 네트워크처럼 동작하게 한다.
@@ -144,7 +146,7 @@ VAULT_PATH=~/MyNotes .venv/bin/python -m mycelium index
 
 ## 인터페이스
 - **CLI(주)** — `index` / `search` / `ask` / `eval` / `graph-build` / `distill` / `agentic` / `serve`.
-- **MCP(선택)** — Claude Code 연동. 등록법은 [`docs/MCP_SETUP.md`](docs/MCP_SETUP.md).
+- **MCP(선택)** — 표준 MCP라 Claude Code·Codex 등 MCP 호환 클라이언트와 연동. 등록법은 [`docs/MCP_SETUP.md`](docs/MCP_SETUP.md).
 
 ---
 
