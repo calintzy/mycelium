@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# 벡터 인덱스 (재생성 가능, 용량 큼)
+chroma/
+*.index
+
+# 그래프 인덱스 (원문 파생, 재생성 가능 — 프라이버시상 커밋 금지, Phase 7)
+graph/
+
+# 🔒 프라이버시 — 실볼트 데이터는 절대 커밋 금지 (D-7)
+# 공개 코퍼스(sample_vault/)만 커밋한다. 실볼트 데이터는 어떤 경로로도 커밋 금지.
+vault_data/
+private_corpus/
+*.private.md
+
+# 개인용 골드셋 — 실볼트 노트명이 들어 있어 커밋 금지.
+# 공개 골드셋(sample_vault 기준)은 src/mycelium/eval/goldset.yaml 만 커밋한다.
+src/mycelium/eval/goldset.local.yaml
+eval/goldset.local.yaml
+
+# 환경
+.env
+.DS_Store

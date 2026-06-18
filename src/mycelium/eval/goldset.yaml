@@ -1,0 +1,99 @@
+# mycelium 평가 골드셋 (sample_vault 기준 — 공개 가능)
+#
+# 목적: grep / 의미검색 / 하이브리드 3방식의 검색 품질을 같은 질문셋으로 비교.
+# 이 골드셋은 리포에 동봉된 합성 코퍼스 sample_vault/ 를 대상으로 한다.
+# 클론 즉시 누구나 재현할 수 있도록, 정답은 모두 sample_vault/ 에 실재하는 노트다.
+#
+# 각 항목:
+#   question        : 자연어 질문
+#   expected_sources: 정답 노트의 볼트 상대경로 리스트. sample_vault 루트 기준 파일명.
+#   category        : 질문 다양성 분류 (keyword / paraphrase / mixed / graph)
+#
+# 다양성 설계 (하이브리드의 가치를 드러내기 위함):
+#   keyword    : 고유명사·정확 키워드가 살아있어 BM25(키워드)에 유리
+#   paraphrase : 노트의 핵심 단어를 의도적으로 피한 의미 질문 → 의미검색에 유리
+#   mixed      : 일부 고유명사 + 개념적 표현이 섞여 둘 다 필요
+#   graph      : 멀티홉·주제형 (그래프 연결/커뮤니티로 잘 잡히는 질문, DESIGN_GRAPHRAG §8)
+#
+# 정직성: 정답은 모두 sample_vault에 실제 존재하는 노트이며, 해당 노트를 읽어 질문의
+#         답이 거기 있음을 확인했다. 결과에 유리하게 조작하지 않았다.
+#         표본이 작아(통계적 벤치마크 아님) 방향성 지표로만 쓴다.
+
+questions:
+  # ---- (a) keyword: 고유명사·정확 키워드형 (BM25 유리) ----
+  - question: "Rust 소유권 3원칙은?"
+    expected_sources:
+      - "rust_ownership_basics.md"
+    category: keyword
+
+  - question: "RRF Reciprocal Rank Fusion에서 K값은 보통 얼마인가?"
+    expected_sources:
+      - "hybrid_search_notes.md"
+    category: keyword
+
+  - question: "마이야르 반응으로 스테이크 풍미를 내는 굽기 방법은?"
+    expected_sources:
+      - "perfect_steak_guide.md"
+    category: keyword
+
+  - question: "제텔카스텐 atomic note 원칙은?"
+    expected_sources:
+      - "note_taking_zettelkasten.md"
+    category: keyword
+
+  # ---- (b) paraphrase: 핵심 단어 회피, 의미검색 유리 ----
+  - question: "표현이 달라도 뜻이 비슷한 문서를 찾는 검색과 정확한 단어를 잡는 검색을 합치는 이유는?"
+    expected_sources:
+      - "hybrid_search_notes.md"
+    category: paraphrase
+
+  - question: "재료를 봉지에 밀봉해 정해진 물 온도로 오래 익혀 고르게 만드는 조리법은?"
+    expected_sources:
+      - "sous_vide_basics.md"
+    category: paraphrase
+
+  - question: "방해 없이 한 가지에 오래 몰입하는 희소한 능력에 대한 책 내용은?"
+    expected_sources:
+      - "book_deep_work_summary.md"
+    category: paraphrase
+
+  - question: "짐을 최대한 줄여 가방 하나로 오래 여행하는 요령은?"
+    expected_sources:
+      - "minimalist_packing.md"
+    category: paraphrase
+
+  - question: "배추의 당을 미생물이 먹어 신맛과 풍미를 만드는 발효 음식은?"
+    expected_sources:
+      - "fermentation_kimchi.md"
+    category: paraphrase
+
+  # ---- (c) mixed: 고유명사 + 개념적 표현 ----
+  - question: "교토에서 후시미 이나리 도리이와 아라시야마 대나무 숲을 도는 동선은?"
+    expected_sources:
+      - "kyoto_travel_notes.md"
+    category: mixed
+
+  - question: "붉은 고기에 풀바디 카베르네를 맞추는 음식·술 짝 맞추기 공식은?"
+    expected_sources:
+      - "wine_pairing_simple.md"
+    category: mixed
+
+  - question: "GC 없이 컴파일 타임에 메모리 안전을 검증하는 언어와 다른 접근 비교는?"
+    expected_sources:
+      - "memory_safety_languages.md"
+    category: mixed
+
+  # ---- (d) graph: 멀티홉·주제형 (그래프 연결/커뮤니티로 잘 잡히는 질문) ----
+  #
+  # 목적(DESIGN_GRAPHRAG §8): 그래프의 "새 능력"(멀티홉 연결·주제 조망)을 측정.
+  # 정직성 경고: 통합(4신호)이 평면(2신호)보다 낫다고 가정하지 않는다. 표본이 작아
+  #   방향성 지표일 뿐이다. 골드셋을 통합 유리하게 조작하지 않는다.
+  - question: "노트를 노드와 엣지로 보고 위키링크로 잇는 지식 구조와 커뮤니티 탐지 개념은?"
+    expected_sources:
+      - "knowledge_graph_intro.md"
+    category: graph
+
+  - question: "마이야르 시어링과 정밀 온도 조리를 잇는 저온조리 기법은?"
+    expected_sources:
+      - "sous_vide_basics.md"
+    category: graph
