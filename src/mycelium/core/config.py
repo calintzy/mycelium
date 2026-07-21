@@ -188,15 +188,3 @@ class Config:
                 f"OLLAMA_BASE_URL은 로컬 호스트만 허용합니다 (완전 로컬 전제, D-1). "
                 f"허용: localhost/127.0.0.1/::1, 입력: {self.ollama_base_url!r}"
             )
-
-
-# 싱글턴 기본 설정 인스턴스 (모듈 로드 시 1회 생성)
-_default: Config | None = None
-
-
-def get_config() -> Config:
-    """기본 Config 인스턴스를 반환한다. 테스트에서는 Config()를 직접 생성해 사용."""
-    global _default
-    if _default is None:
-        _default = Config()
-    return _default

@@ -70,11 +70,6 @@ class ExhaustiveResult:
     failed: int = 0  # LLM 호출 예외로 실패한 수(신뢰성 지표)
     no_graph: bool = False  # 그래프/요약 미존재 시 True
 
-    @property
-    def skipped(self) -> int:
-        """하위 호환: skipped_irrelevant + failed 합계."""
-        return self.skipped_irrelevant + self.failed
-
 
 def _match_summaries(config: Config) -> dict[int, dict]:
     """

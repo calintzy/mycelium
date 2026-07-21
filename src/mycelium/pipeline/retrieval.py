@@ -134,7 +134,6 @@ class HybridRetriever:
         self._vectorstore = create_vectorstore(self._config, embeddings)
 
         # BM25 인덱스 구축 (Chroma → source-of-truth)
-        self._corpus_ids: list[str] = []
         self._corpus_texts: list[str] = []
         self._corpus_metas: list[dict] = []
         self._bm25: BM25Okapi | None = self._build_bm25_index()
@@ -223,11 +222,9 @@ class HybridRetriever:
             include=["documents", "metadatas"]
         )
 
-        ids: list[str] = raw.get("ids", [])
         documents: list[str] = raw.get("documents", []) or []
         metadatas: list[dict] = raw.get("metadatas", []) or []
 
-        self._corpus_ids = ids
         self._corpus_texts = documents
         self._corpus_metas = metadatas
 
@@ -468,10 +465,13 @@ class HybridRetriever:
         #      그래프 이웃 노트의 대표청크에 근접 순위를 부여한다.
         #      시드 산출은 dense+BM25 2신호 RRF로 먼저 정렬한 노트(요약 제외)에서 추출한다
         #      — 그래프 신호 자체가 시드 선정에 끼어들지 않게(순환 방지) 2신호 기준으로 뽑는다.
-        seed_sources = self._select_seed_sources(
-            dense_rank_map, bm25_rank_map, dense_doc_map, summary_set
-        )
-        graph_rank_map = self._graph_proximity_ranks(seed_sources)
+        #      graph_weight=0(기본)이면 결과에 전혀 반영되지 않으므로 BFS 자체를 스킵한다.
+        graph_rank_map: dict[str, int] = {}
+        if self._graph_weight > 0:
+            seed_sources = self._select_seed_sources(
+                dense_rank_map, bm25_rank_map, dense_doc_map, summary_set
+            )
+            graph_rank_map = self._graph_proximity_ranks(seed_sources)
 
         # 3) RRF 융합 — dense + BM25 + graph_proximity + community_summary 합집합 (D-9, D-13)
         # weight=0인 신호는 0점이므로 합집합에서 미리 제외한다.
@@ -502,10 +502,11 @@ class HybridRetriever:
         # graph_proximity 전용 키(dense/bm25 합집합에 없던 그래프 이웃 청크)의 텍스트 조회용
         # 역색인: chunk_key → corpus_idx (대표청크만 들어와 있어 소수).
         graph_only_idx: dict[str, int] = {}
-        for src, chunk_list in self._source_to_chunks.items():
-            for ckey, cidx in chunk_list:
-                if ckey in graph_rank_map:
-                    graph_only_idx[ckey] = cidx
+        if graph_rank_map:
+            for src, chunk_list in self._source_to_chunks.items():
+                for ckey, cidx in chunk_list:
+                    if ckey in graph_rank_map:
+                        graph_only_idx[ckey] = cidx
 
         # 4) RetrievedChunk 조립
         results: list[RetrievedChunk] = []

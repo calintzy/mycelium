@@ -239,7 +239,7 @@ def run_ingestion(
     embeddings: OllamaEmbeddings = create_embeddings(config)
 
     # 기존 컬렉션 삭제 후 재생성 (전체 재인덱싱)
-    _reset_collection(config, embeddings)
+    _reset_collection(config)
     vectorstore: Chroma = create_vectorstore(config, embeddings)
 
     vault_path = config.vault_path
@@ -296,7 +296,7 @@ def run_ingestion(
     )
 
 
-def _reset_collection(config: Config, embeddings: OllamaEmbeddings) -> None:
+def _reset_collection(config: Config) -> None:
     """
     기존 Chroma 컬렉션을 삭제한다.
     chroma_path가 없거나 컬렉션이 없으면 조용히 넘어간다.
